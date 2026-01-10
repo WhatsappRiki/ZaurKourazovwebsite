@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Contact – Zaur Kourazov</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Space Grotesk -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Space Grotesk", sans-serif;
+        background: #000;
+        color: #f5f5f5;
+      }
+
+      body {
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* ---------- PAGE SHELL (same structure as About) ---------- */
+      .contact-shell {
+        min-height: 100vh;
+        padding: 20px 32px 40px; /* match About/Home */
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        column-gap: 40px;
+        align-items: start;
+      }
+
+      /* ---------- LEFT SIDE (same as Home/About) ---------- */
+      .header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .hero-branding {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .hero-logo {
+        text-decoration: none;
+        color: #f5f5f5;
+        opacity: 0.9;
+        font-size: 35px;
+        font-weight: 300;
+        letter-spacing: -0.05em;
+      }
+
+      .hero-logo:hover {
+        opacity: 1;
+      }
+
+      .hero-tagline {
+        font-size: 11px;
+        font-weight: 300;
+        opacity: 0.85;
+        letter-spacing: 0.05em;
+        margin-top: 1px;
+      }
+
+      .hero-nav-vertical {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 40px;
+        margin-top: 170px; /* consistent spacing */
+        text-transform: lowercase;
+        font-size: 15px;
+      }
+
+      .hero-nav-vertical a {
+        opacity: 0.7;
+        letter-spacing: 0.12em;
+        padding: 2px 0;
+        transition: opacity 0.2s ease, letter-spacing 0.25s ease;
+      }
+
+      .hero-nav-vertical a:hover,
+      .hero-nav-vertical a[aria-current="page"] {
+        opacity: 1;
+        letter-spacing: 0.08em;
+      }
+
+      /* ---------- RIGHT SIDE ---------- */
+      .contact-right {
+        display: grid;
+        grid-template-columns: minmax(0, 720px) minmax(0, 480px);
+        column-gap: 48px;
+        align-items: start;
+        max-width: 1200px;
+
+        padding-top: 235px; /* één enkele uitlijning */
+      }
+
+      /* Main text: match About body text */
+      .contact-text {
+        font-size: 14px;
+        line-height: 1.7;
+        max-width: 680px;
+      }
+
+      .contact-text p + p {
+        margin-top: 1.4em;
+      }
+
+      /* ---------- ACTIONS (more clickable, still subtle) ---------- */
+      .contact-actions {
+        margin-top: 66px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        max-width: 420px; /* ⬅️ belangrijk: niet te breed */
+      }
+
+      /* Primary actions: inviting, readable, clear */
+      .action--primary {
+        display: inline-flex;
+        flex-direction: column;
+        align-self: flex-start;
+
+        position: relative; /* ✅ needed for ::after underline */
+
+        font-size: 15px;
+        line-height: 1.4;
+        letter-spacing: 0.01em;
+
+        opacity: 0.88;
+
+        transition: opacity 0.2s ease, transform 0.35s ease;
+      }
+
+      .action--primary:hover {
+        opacity: 1;
+        transform: translateX(2px);
+      }
+
+      .action--primary::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+
+        width: 0%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.55);
+
+        transition: width 0.35s ease;
+      }
+
+      .action--primary:hover::after {
+        width: 100%;
+      }
+
+      .action--primary .hint {
+        margin-top: 4px;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        opacity: 0.6;
+      }
+
+      /* Secondary links: quiet presence */
+      .contact-secondary {
+        margin-top: 22px;
+        display: flex;
+        gap: 18px;
+
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: lowercase;
+        opacity: 0.65;
+      }
+
+      .action--secondary:hover {
+        opacity: 1;
+      }
+
+      /* ---------- IMAGE ---------- */
+      .contact-image {
+        flex-shrink: 0; /* voorkomt krimpen */
+        align-self: flex-start;
+      }
+
+      .contact-image img {
+        display: block;
+        width: 100%;
+        max-width: 480px;
+        height: auto;
+        object-fit: cover;
+
+        /* ultra-subtle 4px feather */
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0px,
+            black 4px,
+            black calc(100% - 4px),
+            transparent 100%
+          ),
+          linear-gradient(
+            to bottom,
+            transparent 0px,
+            black 4px,
+            black calc(100% - 4px),
+            transparent 100%
+          );
+        -webkit-mask-composite: source-in;
+        mask-composite: intersect;
+
+        box-shadow: 0 0 28px rgba(0, 0, 0, 0.18);
+        transform: scale(1.001);
+      }
+
+      /* ---------- RESPONSIVE ---------- */
+      @media (max-width: 1000px) {
+        .contact-shell {
+          grid-template-columns: 1fr;
+          row-gap: 40px;
+        }
+
+        .contact-right {
+          max-width: 720px;
+          padding-top: 235px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero-logo {
+          font-size: 32px;
+        }
+
+        .hero-nav-vertical {
+          margin-top: 80px;
+          gap: 20px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .contact-shell {
+          padding: 20px 18px 40px;
+        }
+
+        .hero-nav-vertical {
+          margin-top: 48px;
+          gap: 18px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="contact-shell">
+      <!-- LEFT SIDE: SAME MENU AS HOME/ABOUT -->
+      <aside class="header-left">
+        <div class="hero-branding">
+          <a href="index.html" class="hero-logo">Zaur Kourazov</a>
+          <div class="hero-tagline">audiovisual artist / filmmaker</div>
+        </div>
+
+        <nav class="hero-nav-vertical" aria-label="Main navigation">
+          <a href="about.html">About</a>
+          <a href="work.html">work</a>
+          <a href="contact.html" aria-current="page">Contact</a>
+        </nav>
+      </aside>
+
+      <!-- RIGHT SIDE -->
+      <section class="contact-right">
+        <!-- LINKS: TEKST -->
+        <div class="contact-text-block">
+          <div class="contact-text">
+            <p>
+              I work across cinema and the audiovisual arts, developing and
+              directing films, as well as working as a cinematographer,
+              alongside mentoring and contributions to workshops or academic
+              programs.
+            </p>
+
+            <p>
+              If what you saw, read, or heard in this virtual space resonates,
+              I’d love to hear from you.
+            </p>
+          </div>
+
+          <div class="contact-actions" aria-label="Contact actions">
+            <a
+              class="action action--primary"
+              href="mailto:zaur.kourazov@gmail.com"
+            >
+              <span class="label">Email me</span>
+              <span class="hint">zaur.kourazov@gmail.com</span>
+            </a>
+
+            <a
+              class="action action--primary"
+              href="https://www.instagram.com/zaur_/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="label">Send a DM</span>
+              <span class="hint">@zaur_</span>
+            </a>
+
+            <div class="contact-secondary">
+              <a
+                class="action action--secondary"
+                href="https://letterboxd.com/ZaurKourazov/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Letterboxd</a
+              >
+              <a
+                class="action action--secondary"
+                href="https://www.flickr.com/photos/zaurkourazov/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Flickr</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

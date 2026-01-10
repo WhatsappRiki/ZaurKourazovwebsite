@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Work – Zaur Kourazov</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Space Grotesk font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Space Grotesk", sans-serif;
+        background: #000;
+        color: #f5f5f5;
+      }
+
+      body {
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      /* ---------- FULL CANVAS ---------- */
+      .work-shell {
+        padding: 18px;
+      }
+
+      /* ---------- EDGE-REVEAL DRAWER ---------- */
+      .edge-hotspot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 22px; /* tweak 16–28px */
+        height: 100vh;
+        z-index: 60;
+      }
+
+      .work-drawer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 300px;
+        padding: 20px 22px;
+        background: rgba(0, 0, 0, 0.84);
+        backdrop-filter: blur(10px);
+        z-index: 70;
+
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+      }
+
+      /* Reveal on hover/focus, and when body has drawer-open (mobile button) */
+      .edge-hotspot:hover + .work-drawer,
+      .work-drawer:hover,
+      .work-drawer:focus-within,
+      body.drawer-open .work-drawer {
+        transform: translateX(0);
+      }
+
+      .drawer-branding {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-bottom: 170px; /* matches homepage spacing */
+      }
+
+      .drawer-logo {
+        text-decoration: none;
+        color: #f5f5f5;
+        opacity: 0.9;
+        font-size: 35px;
+        font-weight: 300;
+        letter-spacing: -0.05em;
+      }
+      .drawer-logo:hover {
+        opacity: 1;
+      }
+
+      .drawer-tagline {
+        font-size: 11px;
+        font-weight: 300;
+        opacity: 0.85;
+        letter-spacing: 0.05em;
+        margin-top: 1px;
+      }
+
+      .drawer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        text-transform: lowercase;
+        font-size: 15px;
+        margin-bottom: 26px;
+      }
+
+      .drawer-nav a {
+        text-decoration: none;
+        color: #f5f5f5;
+        opacity: 0.7;
+        letter-spacing: 0.12em;
+        padding: 2px 0;
+        transition: opacity 0.2s ease, letter-spacing 0.25s ease;
+      }
+      .drawer-nav a:hover {
+        opacity: 1;
+        letter-spacing: 0.08em;
+      }
+      .drawer-nav a[aria-current="page"] {
+        opacity: 1;
+        letter-spacing: 0.08em;
+      }
+
+      .drawer-sep {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.12);
+        margin: 10px 0 18px;
+      }
+
+      /* Filters inside drawer */
+      .drawer-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .filter-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        text-align: left;
+        cursor: pointer;
+
+        color: #f5f5f5;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: lowercase;
+        opacity: 0.7;
+        transition: opacity 0.2s ease, letter-spacing 0.25s ease;
+      }
+      .filter-btn:hover {
+        opacity: 1;
+        letter-spacing: 0.08em;
+      }
+      .filter-btn[aria-pressed="true"] {
+        opacity: 1;
+        letter-spacing: 0.08em;
+      }
+
+      /* Mobile menu button (touch) */
+      .menu-toggle {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 80;
+
+        background: rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #f5f5f5;
+
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: lowercase;
+
+        padding: 8px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+
+        opacity: 0.75;
+        backdrop-filter: blur(8px);
+        transition: opacity 0.2s ease;
+      }
+      .menu-toggle:hover {
+        opacity: 1;
+      }
+
+      /* Scrim for mobile open */
+      .drawer-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 65;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      body.drawer-open .drawer-scrim {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* ---------- MOSAIC GRID (uneven) ---------- */
+      .mosaic {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 18px;
+        grid-auto-flow: dense;
+        align-items: stretch;
+      }
+
+      .tile {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        text-decoration: none;
+
+        opacity: 0.96;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        will-change: opacity, transform;
+      }
+
+      .tile:hover {
+        opacity: 1;
+        transform: translateY(-1px);
+      }
+
+      /* Size variants */
+      .span-3 {
+        grid-column: span 3;
+      }
+      .span-4 {
+        grid-column: span 4;
+      }
+      .span-5 {
+        grid-column: span 5;
+      }
+      .span-6 {
+        grid-column: span 6;
+      }
+      .span-7 {
+        grid-column: span 7;
+      }
+      .span-8 {
+        grid-column: span 8;
+      }
+      .span-9 {
+        grid-column: span 9;
+      }
+
+      /* Aspect variants */
+      .r169 {
+        aspect-ratio: 16 / 9;
+      }
+      .r43 {
+        aspect-ratio: 4 / 3;
+      }
+      .r11 {
+        aspect-ratio: 1 / 1;
+      }
+      .r32 {
+        aspect-ratio: 3 / 2;
+      }
+
+      /* Media wrapper for img + hover video */
+      .media {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: #000;
+      }
+
+      /* Option A: NO CROP for both img + video */
+      .media img,
+      .media video {
+        width: 100%;
+        height: 100%;
+        display: block;
+
+        object-fit: contain; /* no crop */
+        background: #000;
+
+        /* subtle 4px feather */
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0px,
+            black 4px,
+            black calc(100% - 4px),
+            transparent 100%
+          ),
+          linear-gradient(
+            to bottom,
+            transparent 0px,
+            black 4px,
+            black calc(100% - 4px),
+            transparent 100%
+          );
+        -webkit-mask-composite: source-in;
+        mask-composite: intersect;
+
+        box-shadow: 0 0 28px rgba(0, 0, 0, 0.18);
+        transform: scale(1.001);
+      }
+
+      /* Video hidden by default, fades in on hover */
+      .media video {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      .tile:hover .media video {
+        opacity: 1;
+      }
+
+      /* Hover overlay: stack title + role vertically */
+      .overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column; /* ✅ maakt het onder elkaar */
+        align-items: flex-start; /* links uitlijnen */
+        justify-content: flex-end; /* onderaan */
+        padding: 14px 14px;
+
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.62) 0%,
+          rgba(0, 0, 0, 0.22) 40%,
+          rgba(0, 0, 0, 0) 75%
+        );
+
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        pointer-events: none;
+      }
+
+      .tile:hover .overlay {
+        opacity: 1;
+      }
+
+      .overlay .title {
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        opacity: 0.95;
+      }
+
+      .overlay .year {
+        font-size: 11px;
+        opacity: 0.75;
+        letter-spacing: 0.06em;
+      }
+
+      .overlay .role {
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        opacity: 0.65;
+        text-transform: lowercase;
+        margin-top: 6px; /* ✅ spacing werkt nu */
+      }
+
+      /* Filter hide */
+      .is-hidden {
+        display: none !important;
+      }
+
+      /* ---------- RESPONSIVE ---------- */
+      @media (max-width: 1100px) {
+        .span-8,
+        .span-9 {
+          grid-column: span 12;
+        }
+        .span-6,
+        .span-7 {
+          grid-column: span 6;
+        }
+        .span-3,
+        .span-4,
+        .span-5 {
+          grid-column: span 6;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .mosaic {
+          grid-template-columns: repeat(6, 1fr);
+        }
+        .span-3,
+        .span-4,
+        .span-5,
+        .span-6,
+        .span-7,
+        .span-8,
+        .span-9 {
+          grid-column: span 6 !important;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .work-shell {
+          padding: 14px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="edge-hotspot" aria-hidden="true"></div>
+    <div class="drawer-scrim" id="drawer-scrim" aria-hidden="true"></div>
+
+    <button
+      class="menu-toggle"
+      id="menu-toggle"
+      type="button"
+      aria-expanded="false"
+    >
+      menu
+    </button>
+
+    <aside
+      class="work-drawer"
+      id="work-drawer"
+      aria-label="Site menu and filters"
+    >
+      <div class="drawer-branding">
+        <a href="index.html" class="drawer-logo">Zaur Kourazov</a>
+        <div class="drawer-tagline">audiovisual artist / filmmaker</div>
+      </div>
+
+      <nav class="drawer-nav">
+        <a href="about.html">About</a>
+        <a href="work.html" aria-current="page">work</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="drawer-sep"></div>
+
+      <div class="drawer-filters" role="toolbar" aria-label="Work filters">
+        <button
+          class="filter-btn"
+          type="button"
+          data-filter="all"
+          aria-pressed="true"
+        >
+          all
+        </button>
+        <button
+          class="filter-btn"
+          type="button"
+          data-filter="personal"
+          aria-pressed="false"
+        >
+          personal
+        </button>
+        <button
+          class="filter-btn"
+          type="button"
+          data-filter="commissioned"
+          aria-pressed="false"
+        >
+          commissioned
+        </button>
+        <button
+          class="filter-btn"
+          type="button"
+          data-filter="collaboration"
+          aria-pressed="false"
+        >
+          collaborations
+        </button>
+      </div>
+    </aside>
+
+    <main class="work-shell">
+      <section class="mosaic" id="mosaic">
+        <!-- Proteine pinned -->
+        <a
+          class="tile span-8 r169"
+          id="collab-2025"
+          href="https://www.youtube.com/watch?v=Iv9hpX2Fsqw"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="collaboration"
+          data-year="2025"
+          data-pin="true"
+          aria-label="Proteine (2025)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Screenshot%202025-12-29%20at%2000.33.10.png"
+              alt="Still from Proteine"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Proteine%20fragment%201.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">Proteine, <span class="year">2025</span></div>
+            <div class="role">cinematography</div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-5 r43"
+          id="fdg-cnpus25"
+          href="https://www.youtube.com/watch?v=rbBn4TGJ3gk"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="commissioned"
+          data-year="2025"
+          aria-label="FDG CNPUS25 (2025)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/FDG%20CNPUS25%20Still%201.png"
+              alt="Still from FDG CNPUS25"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/CNPUS%2025%20fragment.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">FDG CNPUS25, <span class="year">2025</span></div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-6 r169"
+          href="https://www.youtube.com/watch?v=v8Vp-k3y9yE"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="commissioned"
+          data-year="2024"
+          aria-label="Karlien De Savoye – Lyubov (2024)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Karlien%20Lyubov%20Teaser%202024%20still%201.png"
+              alt="Still from Lyubov by Karlien De Savoye"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Karlien%20Teaser%20fragment.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">
+              Lyubov by Karlien De Savoye, <span class="year">2024</span>
+            </div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-5 r43"
+          href="https://letterboxd.com/film/kerberos/"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="collaboration"
+          data-year="2024"
+          aria-label="Kerberos (2024)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Collab%20-%20Kerberos%20by%20Hazel%20Dupont%202024%20still%201.png"
+              alt="Still from Kerberos by Hazel Dupont"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Collab%20-%20Kerberos%20fragment%201%20.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">Kerberos, <span class="year">2024</span></div>
+            <div class="role">cinematography</div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-7 r169"
+          href="https://youtu.be/cTyoKt3w8MY?si=vjXzVHOZe4Ws3y2C"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="commissioned"
+          data-year="2024"
+          aria-label="Be Flat – Circulation (2024)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Commissioned%20-Be%20Flat%20Circulation%20Still%201.png"
+              alt="Still from Be Flat – Circulation"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Be%20Flat%20Circulation%20fragment%201.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">Circulation, <span class="year">2024</span></div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-7 r169"
+          id="elsewhere"
+          href="https://vimeo.com/914847849/360aad3f19?share=copy&fl=cl&fe=ci"
+          data-category="personal"
+          data-year="2024"
+          aria-label="Elsewhere (2024)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Elsewhere%20still%203.jpg"
+              alt="Still from Elsewhere"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Elsewhere%20fragment%201%20trimmed_720p.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">Elsewhere, <span class="year">2024</span></div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-6 r169"
+          href="https://letterboxd.com/film/it-serves-you-right-to-suffer/"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="collaboration"
+          data-year="2022"
+          aria-label="It serves you right to suffer (2022)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Collab%20-%20It%20serves%20you%20right%20to%20suffer%20-%20by%20Bruce%20Stevens%202022%20still%201.png"
+              alt="Still from It serves you right to suffer"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Collab%20-%20it%20serves%20you%20right%20to%20suffer%20fragment%201.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">
+              It serves you right to suffer, <span class="year">2022</span>
+            </div>
+            <div class="role">cinematography</div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-5 r43"
+          href="https://vimeo.com/759888403"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="commissioned"
+          data-year="2022"
+          aria-label="Be Flat – Ludo & Arsène (2022)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Commissioned%20-%20Be%20Flat%20-%20Ludo%20%26%20Arse%CC%80ne%20UCL%20inauguration%202022%20Still%201.png"
+              alt="Still from Be Flat – Ludo & Arsène"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Be%20Flat%20-%20UCL%20fragment.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">
+              Ludo & Arsène, <span class="year">2022</span>
+            </div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-5 r43"
+          id="stranger"
+          href="https://thisisshort.filmchief.com/hub/viewing-details/745?sec&back=section%2F81"
+          data-category="personal"
+          data-year="2022"
+          aria-label="To a stranger from a stranger (2022)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/To%20a%20stranger%20from%20a%20stranger%20still%202.png"
+              alt="Still from To a stranger from a stranger"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/to%20a%20stranger%20from%20a%20stranger%20fragment%201.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">
+              To a stranger from a stranger, <span class="year">2022</span>
+            </div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-4 r11"
+          href="https://www.youtube.com/watch?v=ElsvuRPM4iM"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="commissioned"
+          data-year="2021"
+          aria-label="Microstart Hamdi (2021)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Commissioned%20Microstart%202021%20Hamdi%20%20still%201.png"
+              alt="Still from Microstart Hamdi"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Commissioned%20-%20MicroStart%20Hamdi%202021%20Fragment.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">
+              Microstart Hamdi, <span class="year">2021</span>
+            </div>
+            <div class="role">direction</div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-6 r169"
+          id="hanyu"
+          href="projects/han-yu-time-is.html"
+          data-category="personal"
+          data-year="2020"
+          aria-label="Han yu / Time is (2020)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Han%20yu%20still%201.jpg"
+              alt="Still from Han yu / Time is"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Han%20yu%20fragment%201.1_720p.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">
+              Han yu / Time is, <span class="year">2020</span>
+            </div>
+          </div>
+        </a>
+
+        <a
+          class="tile span-4 r11"
+          href="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/venuez17.mp4"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-category="commissioned"
+          data-year="2017"
+          aria-label="VENUEZ17 (2017)"
+        >
+          <div class="media">
+            <img
+              src="https://zkwebsitemedia.b-cdn.net/Stills/Commissioned%20-%20VENUEZ%202017%20still%201%20.png"
+              alt="Still from VENUEZ17"
+              loading="lazy"
+            />
+            <video
+              class="preview"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              data-src="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/Venuez17%20fragment%201%20.mov"
+            ></video>
+          </div>
+
+          <div class="overlay">
+            <div class="title">VENUEZ17, <span class="year">2017</span></div>
+          </div>
+        </a>
+      </section>
+    </main>
+
+    <script>
+      // ---------- DRAWER TOGGLE (mobile / touch) ----------
+      const menuToggle = document.getElementById("menu-toggle");
+      const scrim = document.getElementById("drawer-scrim");
+
+      function openDrawer() {
+        document.body.classList.add("drawer-open");
+        menuToggle.setAttribute("aria-expanded", "true");
+      }
+
+      function closeDrawer() {
+        document.body.classList.remove("drawer-open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
+
+      menuToggle.addEventListener("click", () => {
+        if (document.body.classList.contains("drawer-open")) closeDrawer();
+        else openDrawer();
+      });
+
+      scrim.addEventListener("click", closeDrawer);
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeDrawer();
+      });
+
+      // ---------- FILTERS ----------
+      const filterButtons = Array.from(
+        document.querySelectorAll(".filter-btn")
+      );
+      const tiles = Array.from(document.querySelectorAll(".tile"));
+
+      function setActive(btn) {
+        filterButtons.forEach((b) => b.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+      }
+
+      function applyFilter(filter) {
+        tiles.forEach((tile) => {
+          const cat = tile.getAttribute("data-category") || "";
+          const show = filter === "all" || cat === filter;
+          tile.classList.toggle("is-hidden", !show);
+        });
+      }
+
+      filterButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const filter = btn.getAttribute("data-filter");
+          setActive(btn);
+          applyFilter(filter);
+        });
+      });
+
+      // ---------- CHRONO SORT (newest first), keep pinned on top ----------
+      (function sortChronologically() {
+        const mosaic = document.getElementById("mosaic");
+        if (!mosaic) return;
+
+        const allTiles = Array.from(mosaic.querySelectorAll(".tile"));
+        const pinned = allTiles.filter(
+          (t) => t.getAttribute("data-pin") === "true"
+        );
+        const rest = allTiles.filter(
+          (t) => t.getAttribute("data-pin") !== "true"
+        );
+
+        rest
+          .sort((a, b) => {
+            const ay = parseInt(a.getAttribute("data-year") || "0", 10);
+            const by = parseInt(b.getAttribute("data-year") || "0", 10);
+            return by - ay;
+          })
+          .forEach((tile) => mosaic.appendChild(tile));
+
+        // Ensure pinned remain at very top (in original order)
+        pinned.forEach((tile) => mosaic.prepend(tile));
+      })();
+
+      // ---------- HOVER VIDEO PREVIEWS (muted) ----------
+      tiles.forEach((tile) => {
+        const video = tile.querySelector("video.preview");
+        if (!video) return;
+
+        let loaded = false;
+
+        function ensureLoaded() {
+          if (loaded) return;
+          const src = video.getAttribute("data-src");
+          if (!src) return;
+          video.src = src;
+          video.load();
+          loaded = true;
+        }
+
+        function playPreview() {
+          ensureLoaded();
+          video.play().catch(() => {});
+        }
+
+        function stopPreview() {
+          try {
+            video.pause();
+            video.currentTime = 0;
+          } catch (e) {}
+        }
+
+        tile.addEventListener("mouseenter", playPreview);
+        tile.addEventListener("mouseleave", stopPreview);
+
+        tile.addEventListener(
+          "touchstart",
+          () => {
+            ensureLoaded();
+          },
+          { passive: true }
+        );
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Zaur Kourazov</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Space Grotesk font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Space Grotesk", sans-serif;
+        background: #000;
+        color: #f5f5f5;
+      }
+
+      /* HERO WRAPPER */
+      .hero {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .hero video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        filter: brightness(0.9);
+      }
+
+      .hero-overlay {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px 32px;
+        pointer-events: none;
+      }
+
+      /* HEADER LEFT */
+      .hero-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        pointer-events: auto;
+      }
+
+      .hero-branding {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        pointer-events: auto;
+      }
+
+      .hero-logo {
+        pointer-events: auto;
+        text-decoration: none;
+        color: #f5f5f5;
+        opacity: 0.9;
+        font-size: 35px;
+        font-weight: 300;
+        letter-spacing: -0.05em; /* subtiel compacter voor Space Grotesk */
+      }
+
+      .hero-logo:hover {
+        opacity: 1;
+      }
+
+      .hero-tagline {
+        font-size: 11px;
+        font-weight: 300;
+        opacity: 0.85;
+        letter-spacing: 0.05em;
+        margin-top: 1px;
+        color: #ffffff;
+      }
+
+      /* VERTICAL NAV LEFT */
+      .hero-nav-vertical {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 40px;
+        margin-top: 170px;
+        text-transform: lowercase;
+        font-size: 15px;
+      }
+
+      /* Subtiele, filmische hover voor nav links */
+      .hero-nav a {
+        pointer-events: auto;
+        text-decoration: none;
+        color: #f5f5f5;
+        opacity: 0.7;
+        position: relative;
+        display: inline-block;
+        padding: 2px 0;
+        letter-spacing: 0.12em; /* iets rustiger dan 0.16em met dit font */
+        transition: opacity 0.2s ease, letter-spacing 0.2s ease;
+      }
+
+      .hero-nav a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        height: 1px;
+        width: 0;
+        background: rgba(255, 255, 255, 0.7);
+        transition: width 0.25s ease;
+      }
+
+      .hero-nav a:hover {
+        opacity: 1;
+        letter-spacing: 0.08em; /* iets dichterbij elkaar op hover */
+      }
+
+      .hero-nav a:hover::after {
+        width: 100%; /* exact woordbreedte */
+      }
+
+      /* BOTTOM SOUND TOGGLE — LINKS ONDER */
+      .hero-bottom {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        margin-bottom: 10px;
+        font-size: 12px;
+        opacity: 0.8;
+      }
+
+      .sound-toggle-hint {
+        pointer-events: auto;
+        cursor: pointer;
+        font-size: 7px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        background: none;
+        border: none;
+        padding: 4px 0;
+        opacity: 0.7;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .sound-toggle-hint::before {
+        content: "○";
+        font-size: 10px;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+        color: #ffffff;
+      }
+
+      body.sound-on .sound-toggle-hint::before {
+        content: "●";
+        animation: pulse 1.6s infinite ease-in-out;
+        opacity: 1;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.25);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+      }
+
+      .sound-toggle-hint:hover {
+        opacity: 1;
+      }
+
+      /* MOBILE */
+      @media (max-width: 768px) {
+        .hero-overlay {
+          padding: 16px 18px;
+        }
+
+        .hero-logo {
+          font-size: 32px;
+        }
+
+        .hero-nav-vertical {
+          margin-top: 80px;
+          gap: 20px;
+          font-size: 13px;
+        }
+
+        .hero-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="hero">
+      <video id="hero-video" autoplay muted loop playsinline>
+        <source
+          src="https://zkwebsitemedia.b-cdn.net/Directors%20reel.mov"
+          type="video/mp4"
+        />
+      </video>
+
+      <div class="hero-overlay">
+        <header class="hero-header">
+          <div class="header-left">
+            <div class="hero-branding">
+              <a href="index.html" class="hero-logo">Zaur Kourazov</a>
+              <div class="hero-tagline">audiovisual artist / filmmaker</div>
+            </div>
+
+            <nav class="hero-nav hero-nav-vertical">
+              <a href="about.html">About</a>
+              <a href="work.html">work</a>
+              <a href="contact.html">Contact</a>
+            </nav>
+          </div>
+        </header>
+
+        <div class="hero-bottom">
+          <button class="sound-toggle-hint" id="sound-toggle">
+            <span>sound</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const video = document.getElementById("hero-video");
+      const soundToggle = document.getElementById("sound-toggle");
+
+      video.muted = true;
+      video.volume = 1;
+
+      function unmute() {
+        video.muted = false;
+        video.play().catch(() => {});
+        document.body.classList.add("sound-on");
+      }
+
+      function mute() {
+        video.muted = true;
+        document.body.classList.remove("sound-on");
+      }
+
+      function toggleSound() {
+        if (video.muted) {
+          unmute();
+        } else {
+          mute();
+        }
+      }
+
+      soundToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleSound();
+      });
+
+      video.addEventListener("click", toggleSound);
+      // Bewaar voortduren de huidige tijd van de video
+      video.addEventListener("timeupdate", () => {
+        try {
+          localStorage.setItem("heroVideoTime", String(video.currentTime));
+        } catch (e) {
+          // localStorage kan failen in private mode, maar dan negeren we dat gewoon
+        }
+      });
+    </script>
+  </body>
+</html>
