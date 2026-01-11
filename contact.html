@@ -232,39 +232,83 @@
       }
 
       /* ---------- RESPONSIVE ---------- */
-      @media (max-width: 1000px) {
-        .contact-shell {
-          grid-template-columns: 1fr;
-          row-gap: 40px;
-        }
+     /* ---------- MOBILE TUNING (desktop unchanged) ---------- */
 
-        .contact-right {
-          max-width: 720px;
-          padding-top: 235px;
-        }
-      }
+@media (max-width: 1000px) {
+  /* 1 kolom, net als About */
+  .contact-shell {
+    grid-template-columns: 1fr;
+    row-gap: 28px;
+  }
 
-      @media (max-width: 768px) {
-        .hero-logo {
-          font-size: 32px;
-        }
+  /* Rechterkolom start niet zo laag op mobile */
+  .contact-right {
+    grid-template-columns: 1fr; /* geen 2 kolommen op mobile */
+    row-gap: 18px;
+    max-width: none;
+    padding-top: 28px; /* i.p.v. 235px */
+  }
 
-        .hero-nav-vertical {
-          margin-top: 80px;
-          gap: 20px;
-        }
-      }
+  /* Tekst mag meer ademen */
+  .contact-text {
+    max-width: 52ch; /* “About feel” */
+    font-size: 14px;
+    line-height: 1.75;
+  }
 
-      @media (max-width: 600px) {
-        .contact-shell {
-          padding: 20px 18px 40px;
-        }
+  .contact-text p + p {
+    margin-top: 1.2em;
+  }
 
-        .hero-nav-vertical {
-          margin-top: 48px;
-          gap: 18px;
-        }
-      }
+  /* Actions mooi los van de tekst */
+  .contact-actions {
+    margin-top: 34px; /* meer ruimte tussen tekst en buttons */
+    gap: 18px;
+    max-width: 52ch; /* zelfde breedte als tekst */
+  }
+
+  /* Buttons iets luchtiger op touch */
+  .action--primary {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .action--primary .hint {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  /* Secondary links echt “onderaan” gevoel */
+  .contact-secondary {
+    margin-top: 22px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Zelfde padding-gevoel als je About mobile */
+  .contact-shell {
+    padding: 16px 16px 32px;
+  }
+
+  .hero-nav-vertical {
+    margin-top: 56px;
+    gap: 16px;
+  }
+
+  .contact-right {
+    padding-top: 22px;
+  }
+
+  /* Iets breder op kleinere schermen, zodat het minder “smal” voelt */
+  .contact-text,
+  .contact-actions {
+    max-width: 60ch;
+  }
+}
+
     </style>
   </head>
 
