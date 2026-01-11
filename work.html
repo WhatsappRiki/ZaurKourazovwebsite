@@ -401,7 +401,7 @@
 
       /* ---------- MOBILE OPTIMISATIES (desktop blijft identiek) ---------- */
 
-      /* Hover bestaat niet echt op touch: voorkom rare hover-states */
+      /* Hover bestaat niet echt op touch: voorkom sticky hover states */
       @media (hover: none) and (pointer: coarse) {
         .tile:hover .overlay {
           opacity: 0;
@@ -409,9 +409,16 @@
         .tile:hover .media video {
           opacity: 0;
         }
+
+        /* Mobile: show overlay when tile is active (scroll-based) */
+        .tile.is-active .overlay {
+          opacity: 1;
+        }
+        .tile.is-active .media video {
+          opacity: 1;
+        }
       }
 
-      /* Op phone: iets meer “gallery” gevoel, 1 tile per rij */
       @media (max-width: 600px) {
         .mosaic {
           gap: 14px;
@@ -746,7 +753,9 @@
           </div>
 
           <div class="overlay">
-            <div class="title">Ludo & Arsène, <span class="year">2022</span></div>
+            <div class="title">
+              Ludo & Arsène, <span class="year">2022</span>
+            </div>
           </div>
         </a>
 
@@ -819,7 +828,7 @@
         <a
           class="tile span-6 r169"
           id="hanyu"
-          href="https://www.flandersimage.com/titles/time-is/time-is.pdf"
+          href="projects/han-yu-time-is.html"
           data-category="personal"
           data-year="2020"
           aria-label="Han yu / Time is (2020)"
@@ -841,7 +850,9 @@
           </div>
 
           <div class="overlay">
-            <div class="title">Han yu / Time is, <span class="year">2020</span></div>
+            <div class="title">
+              Han yu / Time is, <span class="year">2020</span>
+            </div>
           </div>
         </a>
 
@@ -913,12 +924,33 @@
         btn.setAttribute("aria-pressed", "true");
       }
 
+      // Active tile (used by mobile in-view autoplay)
+      let activeTile = null;
+
+      function stopTilePreview(tile) {
+        if (!tile) return;
+        tile.classList.remove("is-active");
+        const v = tile.querySelector("video.preview");
+        if (v) {
+          try {
+            v.pause();
+            v.currentTime = 0;
+          } catch (e) {}
+        }
+      }
+
       function applyFilter(filter) {
         tiles.forEach((tile) => {
           const cat = tile.getAttribute("data-category") || "";
           const show = filter === "all" || cat === filter;
           tile.classList.toggle("is-hidden", !show);
         });
+
+        // Stop any active preview when filtering (important on mobile)
+        if (activeTile && activeTile.classList.contains("is-hidden")) {
+          stopTilePreview(activeTile);
+          activeTile = null;
+        }
       }
 
       filterButtons.forEach((btn) => {
@@ -929,42 +961,78 @@
         });
       });
 
-      // ---------- PREVIEW LAZY-LOAD (faster on mobile & still fine on desktop) ----------
+      // ---------- PREVIEW LAZY-LOAD + MOBILE IN-VIEW PLAY ----------
+      const isTouch =
+        window.matchMedia &&
+        window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
       const io =
         "IntersectionObserver" in window
           ? new IntersectionObserver(
               (entries) => {
-                entries.forEach((entry) => {
-                  if (!entry.isIntersecting) return;
-                  const tile = entry.target;
-                  const video = tile.querySelector("video.preview");
-                  if (!video) return;
-                  if (video.src) {
-                    io.unobserve(tile);
-                    return;
-                  }
+                // only consider visible tiles that are not filtered out
+                const visible = entries
+                  .filter((e) => e.isIntersecting)
+                  .map((e) => ({
+                    tile: e.target,
+                    ratio: e.intersectionRatio,
+                  }))
+                  .filter((x) => !x.tile.classList.contains("is-hidden"))
+                  .sort((a, b) => b.ratio - a.ratio);
 
-                  const src = video.getAttribute("data-src");
-                  if (src) {
-                    video.src = src;
-                    video.load();
+                if (visible.length === 0) {
+                  // nothing in view: stop current active (mobile-friendly)
+                  if (activeTile) {
+                    stopTilePreview(activeTile);
+                    activeTile = null;
                   }
-                  io.unobserve(tile);
-                });
+                  return;
+                }
+
+                const best = visible[0].tile;
+                if (best === activeTile) return;
+
+                // stop previous
+                if (activeTile) stopTilePreview(activeTile);
+
+                // activate new
+                activeTile = best;
+                activeTile.classList.add("is-active");
+
+                const v = activeTile.querySelector("video.preview");
+                if (!v) return;
+
+                // lazy-load src
+                if (!v.src) {
+                  const src = v.getAttribute("data-src");
+                  if (src) {
+                    v.src = src;
+                    v.load();
+                  }
+                }
+
+                // touch: autoplay when ready
+                if (isTouch) {
+                  const tryPlay = () => v.play().catch(() => {});
+                  if (v.readyState >= 2) tryPlay();
+                  else v.addEventListener("canplay", tryPlay, { once: true });
+                }
               },
-              { rootMargin: "300px 0px" }
+              {
+                threshold: [0.55, 0.7, 0.85],
+                rootMargin: "0px 0px -10% 0px",
+              }
             )
           : null;
 
       if (io) tiles.forEach((t) => io.observe(t));
 
-      // ---------- HOVER VIDEO PREVIEWS (muted) ----------
+      // ---------- HOVER VIDEO PREVIEWS (desktop only) ----------
       tiles.forEach((tile) => {
         const video = tile.querySelector("video.preview");
         if (!video) return;
 
-        function playPreview() {
-          // If IntersectionObserver didn't load yet (very fast hover), load just-in-time.
+        function ensureLoaded() {
           if (!video.src) {
             const src = video.getAttribute("data-src");
             if (src) {
@@ -972,6 +1040,10 @@
               video.load();
             }
           }
+        }
+
+        function playPreview() {
+          ensureLoaded();
           video.play().catch(() => {});
         }
 
@@ -982,20 +1054,16 @@
           } catch (e) {}
         }
 
-        tile.addEventListener("mouseenter", playPreview);
-        tile.addEventListener("mouseleave", stopPreview);
+        if (!isTouch) {
+          tile.addEventListener("mouseenter", playPreview);
+          tile.addEventListener("mouseleave", stopPreview);
+        }
 
-        // Touch: preload only
+        // Touch: preload only (helps first play)
         tile.addEventListener(
           "touchstart",
           () => {
-            if (!video.src) {
-              const src = video.getAttribute("data-src");
-              if (src) {
-                video.src = src;
-                video.load();
-              }
-            }
+            ensureLoaded();
           },
           { passive: true }
         );
@@ -1003,4 +1071,3 @@
     </script>
   </body>
 </html>
-
