@@ -325,6 +325,48 @@
           max-width: 100%;
         }
       }
+      /* ---------- MOBILE OPTIMISATIES ---------- */
+
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    row-gap: 28px;
+  }
+
+  .about-right {
+    grid-template-columns: 1fr;
+    row-gap: 22px;
+    max-width: none;
+  }
+
+  .about-text-block {
+    margin-top: 32px;
+  }
+
+  .about-photo {
+    margin-top: 10px;
+    justify-self: start;
+  }
+
+  .about-photo img {
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-shell {
+    padding: 16px 16px 32px;
+  }
+
+  .hero-nav-vertical {
+    margin-top: 56px;
+    gap: 16px;
+  }
+
+  .bg-video {
+    filter: blur(26px) brightness(0.42);
+  }
+}
     </style>
   </head>
 
