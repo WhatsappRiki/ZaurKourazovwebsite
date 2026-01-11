@@ -318,14 +318,13 @@
         opacity: 1;
       }
 
-      /* Hover overlay: stack title + role vertically */
+      /* Hover overlay: Title, Year */
       .overlay {
         position: absolute;
         inset: 0;
         display: flex;
-        flex-direction: column; /* ✅ maakt het onder elkaar */
-        align-items: flex-start; /* links uitlijnen */
-        justify-content: flex-end; /* onderaan */
+        align-items: flex-end;
+        justify-content: flex-start;
         padding: 14px 14px;
 
         background: linear-gradient(
@@ -339,7 +338,6 @@
         transition: opacity 0.25s ease;
         pointer-events: none;
       }
-
       .tile:hover .overlay {
         opacity: 1;
       }
@@ -358,20 +356,12 @@
         letter-spacing: 0.06em;
       }
 
-      .overlay .role {
-        font-size: 10px;
-        letter-spacing: 0.08em;
-        opacity: 0.65;
-        text-transform: lowercase;
-        margin-top: 6px; /* ✅ spacing werkt nu */
-      }
-
       /* Filter hide */
       .is-hidden {
         display: none !important;
       }
 
-      /* ---------- RESPONSIVE ---------- */
+      /* ---------- RESPONSIVE (existing) ---------- */
       @media (max-width: 1100px) {
         .span-8,
         .span-9 {
@@ -408,13 +398,40 @@
           padding: 14px;
         }
       }
+
+      /* ---------- MOBILE OPTIMISATIES (desktop blijft identiek) ---------- */
+
+      /* Hover bestaat niet echt op touch: voorkom rare hover-states */
+      @media (hover: none) and (pointer: coarse) {
+        .tile:hover .overlay {
+          opacity: 0;
+        }
+        .tile:hover .media video {
+          opacity: 0;
+        }
+      }
+
+      /* Op phone: iets meer “gallery” gevoel, 1 tile per rij */
+      @media (max-width: 600px) {
+        .mosaic {
+          gap: 14px;
+        }
+
+        .overlay {
+          padding: 12px;
+        }
+      }
     </style>
   </head>
 
   <body>
+    <!-- LEFT EDGE HOTSPOT (hover to reveal drawer) -->
     <div class="edge-hotspot" aria-hidden="true"></div>
+
+    <!-- SCRIM (active when drawer-open via button) -->
     <div class="drawer-scrim" id="drawer-scrim" aria-hidden="true"></div>
 
+    <!-- Mobile menu toggle -->
     <button
       class="menu-toggle"
       id="menu-toggle"
@@ -424,6 +441,7 @@
       menu
     </button>
 
+    <!-- DRAWER -->
     <aside
       class="work-drawer"
       id="work-drawer"
@@ -431,7 +449,7 @@
     >
       <div class="drawer-branding">
         <a href="index.html" class="drawer-logo">Zaur Kourazov</a>
-        <div class="drawer-tagline">audiovisual artist / filmmaker</div>
+        <div class="drawer-tagline">Audiovisual artist / filmmaker</div>
       </div>
 
       <nav class="drawer-nav">
@@ -478,9 +496,10 @@
       </div>
     </aside>
 
+    <!-- MOSAIC CANVAS -->
     <main class="work-shell">
       <section class="mosaic" id="mosaic">
-        <!-- Proteine pinned -->
+        <!-- PROTEINE (2025) — stays first -->
         <a
           class="tile span-8 r169"
           id="collab-2025"
@@ -489,7 +508,6 @@
           rel="noopener noreferrer"
           data-category="collaboration"
           data-year="2025"
-          data-pin="true"
           aria-label="Proteine (2025)"
         >
           <div class="media">
@@ -510,10 +528,10 @@
 
           <div class="overlay">
             <div class="title">Proteine, <span class="year">2025</span></div>
-            <div class="role">cinematography</div>
           </div>
         </a>
 
+        <!-- 2025 FDG CNPUS25 (commissioned) -->
         <a
           class="tile span-5 r43"
           id="fdg-cnpus25"
@@ -545,6 +563,7 @@
           </div>
         </a>
 
+        <!-- Karlien De Savoye – Lyubov (2024) -->
         <a
           class="tile span-6 r169"
           href="https://www.youtube.com/watch?v=v8Vp-k3y9yE"
@@ -571,12 +590,11 @@
           </div>
 
           <div class="overlay">
-            <div class="title">
-              Lyubov by Karlien De Savoye, <span class="year">2024</span>
-            </div>
+            <div class="title">Lyubov, <span class="year">2024</span></div>
           </div>
         </a>
 
+        <!-- Kerberos by Hazel Dupont (2024) -->
         <a
           class="tile span-5 r43"
           href="https://letterboxd.com/film/kerberos/"
@@ -584,7 +602,7 @@
           rel="noopener noreferrer"
           data-category="collaboration"
           data-year="2024"
-          aria-label="Kerberos (2024)"
+          aria-label="Kerberos by Hazel Dupont (2024)"
         >
           <div class="media">
             <img
@@ -604,10 +622,10 @@
 
           <div class="overlay">
             <div class="title">Kerberos, <span class="year">2024</span></div>
-            <div class="role">cinematography</div>
           </div>
         </a>
 
+        <!-- Be Flat – Circulation (2024) -->
         <a
           class="tile span-7 r169"
           href="https://youtu.be/cTyoKt3w8MY?si=vjXzVHOZe4Ws3y2C"
@@ -638,6 +656,7 @@
           </div>
         </a>
 
+        <!-- Elsewhere (2024) personal -->
         <a
           class="tile span-7 r169"
           id="elsewhere"
@@ -667,6 +686,7 @@
           </div>
         </a>
 
+        <!-- It serves you right to suffer (2022) collaboration -->
         <a
           class="tile span-6 r169"
           href="https://letterboxd.com/film/it-serves-you-right-to-suffer/"
@@ -674,7 +694,7 @@
           rel="noopener noreferrer"
           data-category="collaboration"
           data-year="2022"
-          aria-label="It serves you right to suffer (2022)"
+          aria-label="It serves you right to suffer by Bruce Stevens (2022)"
         >
           <div class="media">
             <img
@@ -696,10 +716,10 @@
             <div class="title">
               It serves you right to suffer, <span class="year">2022</span>
             </div>
-            <div class="role">cinematography</div>
           </div>
         </a>
 
+        <!-- Be Flat – Ludo & Arsène (2022) commissioned -->
         <a
           class="tile span-5 r43"
           href="https://vimeo.com/759888403"
@@ -726,12 +746,11 @@
           </div>
 
           <div class="overlay">
-            <div class="title">
-              Ludo & Arsène, <span class="year">2022</span>
-            </div>
+            <div class="title">Ludo & Arsène, <span class="year">2022</span></div>
           </div>
         </a>
 
+        <!-- To a stranger from a stranger (2022) personal -->
         <a
           class="tile span-5 r43"
           id="stranger"
@@ -763,6 +782,7 @@
           </div>
         </a>
 
+        <!-- Microstart Hamdi (2021) commissioned -->
         <a
           class="tile span-4 r11"
           href="https://www.youtube.com/watch?v=ElsvuRPM4iM"
@@ -792,10 +812,10 @@
             <div class="title">
               Microstart Hamdi, <span class="year">2021</span>
             </div>
-            <div class="role">direction</div>
           </div>
         </a>
 
+        <!-- Han yu / Time is (2020) personal -->
         <a
           class="tile span-6 r169"
           id="hanyu"
@@ -821,12 +841,11 @@
           </div>
 
           <div class="overlay">
-            <div class="title">
-              Han yu / Time is, <span class="year">2020</span>
-            </div>
+            <div class="title">Han yu / Time is, <span class="year">2020</span></div>
           </div>
         </a>
 
+        <!-- VENUEZ17 (2017) commissioned -->
         <a
           class="tile span-4 r11"
           href="https://zkwebsitemedia.b-cdn.net/Film-video%20fragments/venuez17.mp4"
@@ -886,9 +905,7 @@
       });
 
       // ---------- FILTERS ----------
-      const filterButtons = Array.from(
-        document.querySelectorAll(".filter-btn")
-      );
+      const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
       const tiles = Array.from(document.querySelectorAll(".tile"));
 
       function setActive(btn) {
@@ -912,49 +929,49 @@
         });
       });
 
-      // ---------- CHRONO SORT (newest first), keep pinned on top ----------
-      (function sortChronologically() {
-        const mosaic = document.getElementById("mosaic");
-        if (!mosaic) return;
+      // ---------- PREVIEW LAZY-LOAD (faster on mobile & still fine on desktop) ----------
+      const io =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!entry.isIntersecting) return;
+                  const tile = entry.target;
+                  const video = tile.querySelector("video.preview");
+                  if (!video) return;
+                  if (video.src) {
+                    io.unobserve(tile);
+                    return;
+                  }
 
-        const allTiles = Array.from(mosaic.querySelectorAll(".tile"));
-        const pinned = allTiles.filter(
-          (t) => t.getAttribute("data-pin") === "true"
-        );
-        const rest = allTiles.filter(
-          (t) => t.getAttribute("data-pin") !== "true"
-        );
+                  const src = video.getAttribute("data-src");
+                  if (src) {
+                    video.src = src;
+                    video.load();
+                  }
+                  io.unobserve(tile);
+                });
+              },
+              { rootMargin: "300px 0px" }
+            )
+          : null;
 
-        rest
-          .sort((a, b) => {
-            const ay = parseInt(a.getAttribute("data-year") || "0", 10);
-            const by = parseInt(b.getAttribute("data-year") || "0", 10);
-            return by - ay;
-          })
-          .forEach((tile) => mosaic.appendChild(tile));
-
-        // Ensure pinned remain at very top (in original order)
-        pinned.forEach((tile) => mosaic.prepend(tile));
-      })();
+      if (io) tiles.forEach((t) => io.observe(t));
 
       // ---------- HOVER VIDEO PREVIEWS (muted) ----------
       tiles.forEach((tile) => {
         const video = tile.querySelector("video.preview");
         if (!video) return;
 
-        let loaded = false;
-
-        function ensureLoaded() {
-          if (loaded) return;
-          const src = video.getAttribute("data-src");
-          if (!src) return;
-          video.src = src;
-          video.load();
-          loaded = true;
-        }
-
         function playPreview() {
-          ensureLoaded();
+          // If IntersectionObserver didn't load yet (very fast hover), load just-in-time.
+          if (!video.src) {
+            const src = video.getAttribute("data-src");
+            if (src) {
+              video.src = src;
+              video.load();
+            }
+          }
           video.play().catch(() => {});
         }
 
@@ -968,10 +985,17 @@
         tile.addEventListener("mouseenter", playPreview);
         tile.addEventListener("mouseleave", stopPreview);
 
+        // Touch: preload only
         tile.addEventListener(
           "touchstart",
           () => {
-            ensureLoaded();
+            if (!video.src) {
+              const src = video.getAttribute("data-src");
+              if (src) {
+                video.src = src;
+                video.load();
+              }
+            }
           },
           { passive: true }
         );
@@ -979,3 +1003,4 @@
     </script>
   </body>
 </html>
+
